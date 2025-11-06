@@ -28,7 +28,6 @@ const Login=(props)=>{
             else{
                 console.log("data",data)
                 props.setIsLoggedIn(true)
-                window.location.reload()
 
             }
             const {data:dataId,errorId}=await supabase.from("Users").select("*").eq("id",data["user"]["id"])
@@ -43,6 +42,8 @@ const Login=(props)=>{
             }
             else{
                 console.log("login data",insertData)
+                window.location.reload()
+                
             }
             }
         }
@@ -91,4 +92,5 @@ const Login=(props)=>{
         </div>
     )
 }
+
 export default Login
