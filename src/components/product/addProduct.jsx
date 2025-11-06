@@ -291,16 +291,15 @@ const AddProduct = () => {
                                 required: { value: true, message: "please select category" }
                             })}>
                                 <option value={""}>Choose-Category</option>
-                                <option value={"saree"}>Saree</option>
-                                <option value={"kurti"}>Kurti</option>
-                                <option value={"chaniya choli"}>Chaniya Choli</option>
-                                <option value={"rajputi poshak"}>Rajputi Poshak</option>
-                                <option value={"shirt-pant"}>Shirt-pant</option>
-                                <option value={"shirt"}>Shirt</option>
-                                <option value={"pant"}>Pant</option>
-                                <option value={"marwadi suit"}>Marwadi suit</option>
-                                <option value={"top"}>Top</option>
-                                <option value={"jeans"}>Jeans</option>
+                                <option value={"Saree"}>Saree</option>
+                                <option value={"Kurti"}>Kurti</option>
+                                <option value={"Chaniya choli"}>Chaniya Choli</option>
+                                <option value={"Rajputi poshak"}>Rajputi Poshak</option>
+                                <option value={"Shirt-pant"}>Shirt-pant</option>
+                                <option value={"Shirt"}>Shirt</option>
+                                <option value={"Pant"}>Pant</option>
+                                <option value={"Top"}>Top</option>
+                                <option value={"Jeans"}>Jeans</option>
                             </select>
 
                             <div className="">
@@ -355,12 +354,12 @@ const AddProduct = () => {
                                         required: { value: true, message: "please give location" }
                                     })}>
                                         <option value={""}>Choose-Location</option>
-                                        <option value={"palanpur"}>Palanpur</option>
-                                        <option value={"gandhinagar"}>Gandhinagar</option>
-                                        <option value={"ahmedabad"}>Ahmedabad</option>
-                                        <option value={"rajkot"}>Rajkot</option>
-                                        <option value={"deesa"}>Deesa</option>
-                                        <option value={"dhanera"}>Dhanera</option>
+                                        <option value={"Palanpur"}>Palanpur</option>
+                                        <option value={"Gandhinagar"}>Gandhinagar</option>
+                                        <option value={"Ahmedabad"}>Ahmedabad</option>
+                                        <option value={"Rajkot"}>Rajkot</option>
+                                        <option value={"Deesa"}>Deesa</option>
+                                        <option value={"Dhanera"}>Dhanera</option>
                                     </select>
                                 </div>
                             </div>
@@ -447,7 +446,7 @@ const AddProduct = () => {
                                         }
                                     </div>
                                     {/* {!state? */}
-                                    < input className="w-[80%] " onInput={handleSimilarImage} type='file' multiple accept='image/*' capture='environment' {...register("similarImage")} disabled={state} />
+                                    < input className="w-[80%] " onInput={handleSimilarImage} type='file' multiple accept='image/*' {...register("similarImage")} disabled={state} />
                                     {/* } */}
                                 </div>
                             </div>
@@ -463,7 +462,7 @@ const AddProduct = () => {
                                 }
                             </div>
 
-                            < input className=" hidden " onInput={handleImage} type='file' multiple accept='image/*' capture='environment'
+                            < input className=" hidden " onInput={handleImage} type='file' multiple accept='image/*' 
                                 {...rest}
                                 ref={(e) => {
                                     rhfRef(e)
@@ -518,4 +517,5 @@ const AddProduct = () => {
 
         )
     }
+
     export default AddProduct 
