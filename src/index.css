@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+
+@theme {
+      --font-family-sans: 'Inter', sans-serif;
+      --spacing-7: 1.75rem; /* Example custom spacing */
+      --animate-loadingImage:loadingImage 1.5s ease-in-out infinite;
+      
+      @keyframes loadingImage{
+        0%{
+          position: relative;
+          left:0%;
+          opacity:0;
+        }
+        10%{
+          position: relative;
+          left:10%;
+          opacity:0.2;
+        }
+        
+        20%{
+          position: relative;
+          left:20%;
+          opacity:0.3;
+
+        }
+        30%{
+          position: relative;
+          left:30%;
+          opacity:0.6;
+
+        }
+        40%{
+          position: relative;
+          left:40%;
+          opacity:0.8;
+
+        }
+        50%{
+          position: relative;
+          left:50%
+        }
+        60%{
+          position: relative;
+          left:60%
+        }
+        70%{
+          position: relative;
+          left:70%
+        }
+        80%{
+          position: relative;
+
+          left:80%
+        }
+        90%{
+          position: relative;
+          background-color:none;
+          left:90%
+        }
+        
+        100%{
+          position: relative;
+          left:100%
+        }
+      }
+      --animate-delivery:delivery 2s ;
+      @keyframes delivery{
+        from{
+          height:0px;
+        }
+        to{
+        height:33px
+        }
+      }
+      
+    }
+.scrollbar-hide::-webkit-scrollbar{
+  display: none;
+}
+#tick{
+  animation:tick-color 1s forwards;
+  animation-delay: 2s;
+
+}
+@keyframes  tick-color{
+
+  from{
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+body{
+  background-color: #e2e8f0;
+}
