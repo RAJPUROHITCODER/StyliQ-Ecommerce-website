@@ -90,7 +90,7 @@ const AddProduct = () => {
         }, 1000);
 
         let date=Date.now()
-
+        const { data: { user }, error } = await supabase.auth.getUser()
         if (!state) {     
             let nextPageArray = []
             for (let file of data.similarImage) {
@@ -118,7 +118,7 @@ const AddProduct = () => {
                 similarImage: nextPageArray,
                 size: sizeQuantity,
                 discount: data.discount,
-                ownerId: userId.id
+                ownerId: user.id
             })
             console.log(color,"c   ",color.current)
             setTimeout(()=>{
@@ -199,7 +199,7 @@ const AddProduct = () => {
                 similarImage: !state ? similarImageFile : state.similarImage,
                 size: sizeQuantity,
                 discount: data.discount,
-                ownerId: userId.id
+                ownerId: user.id
             }
             if (!state) {
                 const { data1, error } = await supabase.from("myProductInfo").insert(myProductData).single()
@@ -519,3 +519,4 @@ const AddProduct = () => {
     }
 
     export default AddProduct 
+
