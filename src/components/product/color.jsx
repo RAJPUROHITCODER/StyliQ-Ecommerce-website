@@ -121,7 +121,7 @@ const Color = (prop) => {
                                     }) : <div className="bg-gray-300 w-[90%] h-30"></div>
                             }
                         </div>
-                        < input className="w-[68%]  mx-4 m-2 border-1 " onInput={handleSimilarImage} type='file' multiple accept='image/*' capture='environment' {...register("imageName",{required:true})} />
+                        < input className="w-[68%]  mx-4 m-2 border-1 " onInput={handleSimilarImage} type='file' multiple accept='image/*'  {...register("imageName",{required:true})} />
                         <button type="submit" className="w-[19%] border-1 rounded-xl bg-green-500 hover:bg-green-600 active:border-2" >ADD</button>
                     </div>
                 </div>
@@ -131,4 +131,5 @@ const Color = (prop) => {
         </div>
     )
 }
+
 export default Color
