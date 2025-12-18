@@ -7,6 +7,7 @@ const ProductPage = () => {
     const { id } = useParams()
     const [data, setData] = useState([])
     const [suggestion, setSuggestion] = useState([])
+    const [color,setColor]=useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [quantityCount, setQuantityCount] = useState(1)
     const [size, setSize] = useState("")
@@ -15,7 +16,10 @@ const ProductPage = () => {
     const [liked, setLiked] = useState(false)
     const userId = useSelector(state => state.user1.user)
     // console.log("id**********", id)
+    console.log("product Image",productMainImage)
     useEffect(() => {
+        setLiked(false)
+        console.log("id*******",id)
         async function showProductInfo(params) {
             const { data, error } = await supabase.from("myProductInfo").select("*").eq("id", id)
             if (error) {
@@ -24,9 +28,17 @@ const ProductPage = () => {
             else {
                 // console.log("page info", data, "asds", data[0]["category"])
             }
+            console.log("group",data[0].id)
+            const {data:moreColor,error:moreColorError}=await  supabase.from("myProductInfo").select("id,imageName").eq("groupId",data[0].groupId)
+            if(moreColorError){
+                console.log("error ce",moreColorError)
+            }
+            setColor(moreColor)
+            console.log("group id data",moreColor)
             setData(data)
-            setIsLoading(true)
-            // console.log("data", data)
+            console.log("data*******************************", data)
+            setIsLoading(true) 
+
             if(data.length!=0){
             console.log(data[0]["size"])
             setProductMainImage(data[0]["imageName"][0])
@@ -179,14 +191,14 @@ const ProductPage = () => {
                                 <p className=" text-xl text-green-700">&nbsp; {data[0]["discount"]}% off</p>
                             </div>
                             {
-                                data[0]["similarImage"] != null ? <div>
+                                    color!= [] ? <div>
                                     <p className="font-serif text-xl">More colors</p>
                                     <div className="flex overflow-x-auto gap-1  m-2 mb-6  scrollbar-hide">
                                         {
-                                            data[0]["similarImage"].slice(0, 8).map((item) => {
-                                                return <Link to={"/product/" + data[0]["id"].slice(0, data[0]["id"].indexOf("_")) + "_" + item.replaceAll("/", '')}>
+                                            color?.slice(0, 8).map((item) => {
+                                                return <Link to={"/product/" + item["id"]}>
                                                     <div className="border-2  border-gray-500 flex justify-center items-center p-1  rounded-2xl">
-                                                        <img src={`https://jlffsopwqlzahqgrwtee.supabase.co/storage/v1/object/public/myProductsBucket/${item}`} onClick={() => setProductMainImage(item)} className=" min-w-20 h-23  rounded-xl" />
+                                                        <img src={`https://jlffsopwqlzahqgrwtee.supabase.co/storage/v1/object/public/myProductsBucket/${item["imageName"][0]}`} onClick={() => setProductMainImage(item["imageName"][0])} className=" min-w-20 h-23  rounded-xl" />
                                                     </div>
                                                 </Link>
 
@@ -265,4 +277,3 @@ export default ProductPage
 //                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
 //   <path d="M2.25 2.25a.75.75 0 0 0 0 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 0 0-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 0 0 0-1.5H5.378A2.25 2.25 0 0 1 7.5 15h11.218a.75.75 0 0 0 .674-.421 60.358 60.358 0 0 0 2.96-7.228.75.75 0 0 0-.525-.965A60.864 60.864 0 0 0 5.68 4.509l-.232-.867A1.875 1.875 0 0 0 3.636 2.25H2.25ZM3.75 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM16.5 20.25a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" />
 // </svg>
-
