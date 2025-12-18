@@ -2,10 +2,13 @@ import { useForm } from "react-hook-form"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { supabase } from "../supabase"
+import {v7 as uuidv7} from 'uuid'
+
 const Color = (prop) => {
     const [preview, setPreview] = useState([])
     const userId = useSelector(state => state.user1.user)
     const [addBtnClicked,setAddBtnClicked]=useState(false)
+    const [id,setId]=useState(uuidv7())
     const {
         register,
         handleSubmit,
@@ -54,7 +57,7 @@ const Color = (prop) => {
         console.log("prop.nextimage",prop.nextPage.similarImage)
         console.log("next page",prop.nextPage)
         const myProductData = {
-            id:prop.nextPage.id+"_"+prop.nextPage.similarImage[prop.index].replaceAll("/",""),
+            id:id,
             Description: prop.nextPage.Description,
             Location: prop.nextPage.Location,
             brandName: prop.nextPage.brandName,
@@ -66,7 +69,8 @@ const Color = (prop) => {
             similarImage: prop.nextPage.similarImage,
             size: sizeQuantity,
             discount: prop.nextPage.discount,
-            ownerId: userId.id
+            ownerId: userId.id,
+            groupId:prop.nextPage.groupId
         }
         console.log("myprodcut ",myProductData)
         const { data: updated, updatedError } = await supabase.from("myProductInfo").insert(myProductData).eq("id", userId.id)
@@ -121,7 +125,7 @@ const Color = (prop) => {
                                     }) : <div className="bg-gray-300 w-[90%] h-30"></div>
                             }
                         </div>
-                        < input className="w-[68%]  mx-4 m-2 border-1 " onInput={handleSimilarImage} type='file' multiple accept='image/*'  {...register("imageName",{required:true})} />
+                        < input className="w-[68%]  mx-4 m-2 border-1 " onInput={handleSimilarImage} type='file' multiple accept='image/*' capture='environment' {...register("imageName",{required:true})} />
                         <button type="submit" className="w-[19%] border-1 rounded-xl bg-green-500 hover:bg-green-600 active:border-2" >ADD</button>
                     </div>
                 </div>
@@ -131,5 +135,4 @@ const Color = (prop) => {
         </div>
     )
 }
-
 export default Color
