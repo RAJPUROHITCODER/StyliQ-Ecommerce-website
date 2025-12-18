@@ -10,18 +10,16 @@ const AddProduct = () => {
     const [preview, setPreview] = useState([])
     const [index, setIndex] = useState(0)
     const [similarImagePreview, setSimilarImagePreview] = useState([])
-    const userId = useSelector(state => state.user1.user)
-    console.log("userId",userId)
-    // console.log("userId", userId)
+    // const userId = useSelector(state => state.user1.user)
     const [id,setId]=useState(uuidv7())
+    const [groupId,setGroupId]=useState(uuidv7()) //new
     const { state } = useLocation()
+    console.log("************state**",state)
     const color = useRef(null)
-    // console.log("**************state*****************", state)
     const [message, setMessage] = useState("")
     const [btn, setBtn] = useState("Next")
     const [nextPage, setNextPage] = useState([])
     const navigate = useNavigate()
-    // console.log("nextapge***************", nextPage)
     const {
         register,
         watch,
@@ -29,53 +27,43 @@ const AddProduct = () => {
         reset,
         getValues,
         formState: { errors, isSubmitting },
-
     } = useForm()
+
     const { ref: rhfRef, ...rest } = register("image", !state ? { required: true } : "")
     useEffect(() => {
         state ? reset({
-            Description: state.Description,
-            Location: state.Location,
-            brandName: state.brandName,
-            category: state.category,
-            image: state.imageName,
-            price: state.price,
-            productName: state.productName,
-            fabric: state.fabric,
-            similarImage: state.similarImage,
+            Description: state.product?state.product.Description:state.Description,
+            Location: state.product?state.product.Location:state.Location,
+            brandName: state.product?state.product.brandName:state.brandName,
+            category: state.product?state.product.category:state.category,
+            image: state.product?state.product.imageName:state.imageName,
+            price: state.product?state.product.price:state.price,
+            productName: state.product?state.product.productName:state.productName,
+            fabric: state.product?state.product.fabric:state.fabric,
+            similarImage: state.product?state.product.similarImage:state.similarImage,
             // size: state.size,
             discount: state.discount
         }) : ""
 
         let images = []
-        // console.log("wacth similar image", watch("similarImage"))
-        // console.log("wacth image", watch("image"))
-        // console.log("watch", Boolean(watch("similarImage")))
 
         state && watch("image").length != 0 ? watch("image").map((items) => {
             images.push("https://jlffsopwqlzahqgrwtee.supabase.co/storage/v1/object/public/myProductsBucket/" + items)
         }) : ""
-        // console.log("url of image",)
         setPreview(images)
         let similarImages = []
         state && watch("similarImage").length != 0 ? watch("similarImage").map((items) => {
             similarImages.push("https://jlffsopwqlzahqgrwtee.supabase.co/storage/v1/object/public/myProductsBucket/" + items)
         }) : ""
-        // console.log("images", images)
         setSimilarImagePreview(similarImages)
     }, [])
-    // console.log("get value", getValues(), "staet", state)
 
-    console.log("refrsh")
     async function saveData(data) {
-        console.log("saveData",data)
-        console.log("saveData")
         const sizeQuantity = Object.keys(data.size)
             .filter((item) => data.size[item].checked != false)
             .map((item) => ({
                 [item]: Number(data.size[item].quantity),
             }));
-        console.log("size*", sizeQuantity)
         if (sizeQuantity.length == 0) {
             setMessage("Please Select Size")
             setTimeout(() => {
@@ -97,16 +85,14 @@ const AddProduct = () => {
                 const fileName = `category/${data.category}/` + file.name + date
                 nextPageArray.push(fileName)
             }
-            console.log("nextpageAra",nextPageArray)
             let image=[]
             for (let file of data.image) {
                     const fileName = `category/${data.category}/` + file.name + date
                     image.push(fileName)
                     break
                 }
-                console.log("image",image)
+            
             setNextPage({
-                id:id,
                 Description: data.Description,
                 Location: data.Location,
                 brandName: data.brandName,
@@ -118,9 +104,9 @@ const AddProduct = () => {
                 similarImage: nextPageArray,
                 size: sizeQuantity,
                 discount: data.discount,
-                ownerId: user.id
+                ownerId: user.id,
+                groupId:groupId
             })
-            console.log(color,"c   ",color.current)
             setTimeout(()=>{
                 try{
                 color.current.scrollIntoView({
@@ -136,16 +122,21 @@ const AddProduct = () => {
             let fileNames = []
             if (state) {
                 for (let file of data.image) {
-
-                    const oldImage = state["imageName"].filter(x => x.slice(0, x.lastIndexOf(".")) == ((Boolean(file.name) ? `category/${data.category}/` + file.name : file)).slice(0, x.lastIndexOf(".")))
+                    let oldImage
+                    if(!state.product){
+                        oldImage = state["imageName"].filter(x => x.slice(0, x.lastIndexOf(".")) == ((Boolean(file.name) ? `category/${data.category}/` + file.name : file)).slice(0, x.lastIndexOf(".")))
+                    }
+                    else{
+                        oldImage = state.product["imageName"].filter(x => x.slice(0, x.lastIndexOf(".")) == ((Boolean(file.name) ? `category/${data.category}/` + file.name : file)).slice(0, x.lastIndexOf(".")))
+                    }
                     if (oldImage.length == 0) {
                         const fileName = `category/${data.category}/` + file.name + date
                         const { data: uploadData, uploadError } = await supabase.storage.from("myProductsBucket").upload(fileName, file)
                         if (uploadError) {
-                            // console.log("upload Error")
+                        console.log("uploadError",uploadError)
+
                         }
                         else {
-                            // console.log("upload data", uploadData)
                             fileNames.push(fileName)
                         }
                     }
@@ -155,14 +146,14 @@ const AddProduct = () => {
                 }
             }
             else {
+                console.log("do it come here")
                 for (let file of data.image) {
                     const fileName = `category/${data.category}/` + file.name + date
                     const { data: uplodData, uploadError } = await supabase.storage.from("myProductsBucket").upload(fileName, file)
                     if (uploadError) {
-                        // console.log("upload Error")
+                        console.log("uploadError",uploadError)
                     }
                     else {
-                        // console.log("upload data", uploadData)
                         fileNames.push(fileName)
                     }
                 }
@@ -170,24 +161,19 @@ const AddProduct = () => {
             const ids=[id+"__"+data.image[0].name]
             let similarImageFile = []
             for (let file of data.similarImage) {
-                // console.log("i am runing similar")
                 const fileName = `category/${data.category}/` + file.name + date
                 const { data: uploadData, uploadError } = await supabase.storage.from("myProductsBucket").upload(fileName, file)
                 if (uploadError) {
-                    // console.log("upload Error")
                 }
                 else {
-                    // console.log("upload data", uploadData)
                     similarImageFile.push(fileName)
                     ids.push(id+"__"+file.name)
                 }
 
-                // console.log("data image file", file)
             }
-            // console.log("size", data.size)
             
             const myProductData = {
-                id:id+"_"+fileNames[0].replaceAll("/",""),
+                id:id,
                 Description: data.Description,
                 Location: data.Location,
                 brandName: data.brandName,
@@ -196,36 +182,41 @@ const AddProduct = () => {
                 price: data.price,
                 productName: data.productName,
                 fabric: data.fabric,
-                similarImage: !state ? similarImageFile : state.similarImage,
+                similarImage: !state ? similarImageFile : !state.product? state.similarImage:state.product.similarImage,
                 size: sizeQuantity,
                 discount: data.discount,
-                ownerId: user.id
+                ownerId: user.id,
+                groupId:!state ? groupId: !state.product? state.groupId:state.product.groupId
             }
-            if (!state) {
+            if (!state) { 
+                console.log("regular")
                 const { data1, error } = await supabase.from("myProductInfo").insert(myProductData).single()
                 if (error) {
-                    // console.log('error while insert', error)
                 }
                 else {
-                    // console.log("data", data1)
                 }
                 // navigate("/myproducts")
-                // console.log("form data", data)
+            }
+            else if(state.mode=="Add variant"){
+                console.log("add variant")
+                const { data1, error } = await supabase.from("myProductInfo").insert(myProductData).single()
+                if(error){
+                    console.log("error hai",error)
+                }
+                Navigate("/myproducts")
             }
             else {
-                // console.log("***********next page *********", [])
+                console.log("update")
                 setMessage("Product Updated")
                 setTimeout(() => {
                     setMessage("")
                 }, 1000);
                 const { data: updated, updatedError } = await supabase.from("myProductInfo").update(myProductData).eq("id", state.id)
                 if (updatedError) {
-                    // console.log('error while insert', updatedError)
                 }
                 else {
-                    // console.log("data", updated)
                 }
-                // navigate("/myproducts")
+                navigate("/myproducts")
 
             }
         }
@@ -233,48 +224,32 @@ const AddProduct = () => {
             if (fileInputRef.current) {
                 fileInputRef.current.click()
             }
-            // console.log("image clicked", fileInputRef)
         }
 
         const handleImage = (e) => {
-            // console.log("******")
             let images = []
             Object.values(e.target.files).map((items) => {
-                // console.log("111111111", items)
                 images.push(URL.createObjectURL(items))
             })
 
-            // console.log("images", images)
             setPreview(images)
-            // console.log("other Images",preview)
             // preview.map((items)=>{
-            //     console.log("other =",items.name)
             // })
 
-            // console.log("*******file=",file,"    target",e.target)
-            // console.log(preview)
         }
 
         const handleSimilarImage = (e) => {
-            // console.log("******")
             let images = []
             Object.values(e.target.files).map((items) => {
-                // console.log("111111111", items)
                 images.push(URL.createObjectURL(items))
             })
 
-            // console.log("images", images)
             setSimilarImagePreview(images)
             setTimeout(() => {
-                // console.log("similarImagePreview", similarImagePreview)
             }, 3000);
-            // console.log("other Images",preview)
             // preview.map((items)=>{
-            //     console.log("other =",items.name)
             // })
 
-            // console.log("*******file=",file,"    target",e.target)
-            // console.log(similarImagePreview)
         }
         return (
 
@@ -291,15 +266,16 @@ const AddProduct = () => {
                                 required: { value: true, message: "please select category" }
                             })}>
                                 <option value={""}>Choose-Category</option>
-                                <option value={"Saree"}>Saree</option>
-                                <option value={"Kurti"}>Kurti</option>
-                                <option value={"Chaniya choli"}>Chaniya Choli</option>
-                                <option value={"Rajputi poshak"}>Rajputi Poshak</option>
-                                <option value={"Shirt-pant"}>Shirt-pant</option>
-                                <option value={"Shirt"}>Shirt</option>
-                                <option value={"Pant"}>Pant</option>
-                                <option value={"Top"}>Top</option>
-                                <option value={"Jeans"}>Jeans</option>
+                                <option value={"saree"}>Saree</option>
+                                <option value={"kurti"}>Kurti</option>
+                                <option value={"chaniya choli"}>Chaniya Choli</option>
+                                <option value={"rajputi poshak"}>Rajputi Poshak</option>
+                                <option value={"shirt-pant"}>Shirt-pant</option>
+                                <option value={"shirt"}>Shirt</option>
+                                <option value={"pant"}>Pant</option>
+                                <option value={"marwadi suit"}>Marwadi suit</option>
+                                <option value={"top"}>Top</option>
+                                <option value={"jeans"}>Jeans</option>
                             </select>
 
                             <div className="">
@@ -354,12 +330,12 @@ const AddProduct = () => {
                                         required: { value: true, message: "please give location" }
                                     })}>
                                         <option value={""}>Choose-Location</option>
-                                        <option value={"Palanpur"}>Palanpur</option>
-                                        <option value={"Gandhinagar"}>Gandhinagar</option>
-                                        <option value={"Ahmedabad"}>Ahmedabad</option>
-                                        <option value={"Rajkot"}>Rajkot</option>
-                                        <option value={"Deesa"}>Deesa</option>
-                                        <option value={"Dhanera"}>Dhanera</option>
+                                        <option value={"palanpur"}>Palanpur</option>
+                                        <option value={"gandhinagar"}>Gandhinagar</option>
+                                        <option value={"ahmedabad"}>Ahmedabad</option>
+                                        <option value={"rajkot"}>Rajkot</option>
+                                        <option value={"deesa"}>Deesa</option>
+                                        <option value={"dhanera"}>Dhanera</option>
                                     </select>
                                 </div>
                             </div>
@@ -517,6 +493,4 @@ const AddProduct = () => {
 
         )
     }
-
     export default AddProduct 
-
