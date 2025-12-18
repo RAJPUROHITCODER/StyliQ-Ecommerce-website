@@ -26,9 +26,6 @@ const MyProducts = () => {
         setRemove(null)
 
     }
-    async function handleUpdate(params) {
-
-    }
     return (
         <div className="pt-22">
             {
@@ -62,10 +59,18 @@ const MyProducts = () => {
 
                                             </div>
                                             <div className="flex  sm:hidden">
-                                                <Link to="/addProduct" state={item} >
-                                                    <button className="font-bold  border-1 w-22 active:border-2 m-2 h-7" onClick={() => handleUpdate(item.id)}>Update</button>
-                                                </Link>
-                                                <button className="font-bold my-2 border-1 w-22 active:border-2 h-7" onClick={() => setRemove(item.id)}>Remove</button>
+                                                <div>
+                                                    <div>
+                                                        <Link to="/addProduct" state={item} >
+                                                            <button className="font-bold  border-1 w-22 active:border-2 m-2 h-7" >Update</button>
+                                                        </Link>
+                                                        <button className="font-bold my-2 border-1 w-22 active:border-2 h-7" onClick={() => setRemove(item.id)}>Remove</button>
+                                                    </div>
+                                                    <Link to="/addProduct" state={{ product: item, mode: "Add variant" }} >
+                                                        <button className="font-bold mx-2 mb-2 border-1 w-46 active:border-2 h-7">Add Variant</button>
+                                                    </Link>
+
+                                                </div>
                                                 <div>
                                                     {
                                                         remove == item.id ? <div className="flex justify-center items-center h-[100dvh] w-[100dvw] absolute left-0 top-0 ">
@@ -74,8 +79,8 @@ const MyProducts = () => {
                                                                 <div className="flex justify-end ">
                                                                     <button className="border-1 w-25 active:border-2 mx-2" onClick={() => setRemove(false)}>Cancel</button>
                                                                     <button className="border-1 w-25 active:border-2 mx-2  bg-red-500" onClick={() => handleRemove(item.id)}>Remove</button>
-
                                                                 </div>
+
                                                             </div>
                                                         </div> : ''
                                                     }
@@ -84,10 +89,18 @@ const MyProducts = () => {
                                         </div>
                                     </div>
                                     <div className="sm:flex mr-3 hidden items-center">
-                                        <Link to="/addProduct" state={item} >
-                                            <button className="font-bold  border-1 w-30 active:border-2 m-2 h-10" onClick={() => handleUpdate(item.id)}>Update</button>
-                                        </Link>
-                                        <button className="font-bold  border-1 w-30 active:border-2 h-10" onClick={() => setRemove(item.id)}>Remove</button>
+                                        <div>
+                                            <div>
+                                                <Link to="/addProduct" state={item} >
+                                                    <button className="font-bold  border-1 w-30 active:border-2 m-2 h-8" >Update</button>
+                                                </Link>
+                                                <button className="font-bold  border-1 w-30 active:border-2 h-8" onClick={() => setRemove(item.id)}>Remove</button>
+
+                                            </div>
+                                            <Link to="/addProduct" state={{ product: item, mode: "Add variant" }} >
+                                                <button className="font-bold mx-2 mb-2 border-1 w-62 active:border-2 h-7">Add Variant</button>
+                                            </Link>
+                                        </div>
                                         <div>
                                             {
                                                 remove == item.id ? <div className="flex justify-center items-center h-[100dvh] w-[100dvw] absolute left-0 top-0 ">
