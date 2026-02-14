@@ -12,7 +12,6 @@ const Login=(props)=>{
     }=useForm()
 
     async function onSubmit(userData) {
-        console.log("********************",userData)
         const email=userData.email
         const password=userData.password
         if(isSignIn){
@@ -21,27 +20,25 @@ const Login=(props)=>{
                 if(error.message=="Invalid login credentials"){
                     alert(error.message)
                 }
+                else  if(error.message=="Email not confirmed"){
+                    alert("Please verify your email. Check spam if not found")
+                }
                 else{
                     alert("login another message",error.message)
                 }
             }
             else{
-                console.log("data",data)
                 props.setIsLoggedIn(true)
 
             }
             const {data:dataId,errorId}=await supabase.from("Users").select("*").eq("id",data["user"]["id"])
-            if(errorId){
-                console.log("error Id",errorId)
-            }
-            // console.log("dataId",dataId,"   ", dataId.length==0)
+           
             if(dataId.length==0){  
             const {insertData,errors}=await supabase.from("Users").insert({id:data["user"]["id"]}).single()
             if(errors){
-                console.log("login error",errors)
+                alert(error.message)
             }
             else{
-                console.log("login data",insertData)
                 window.location.reload()
                 
             }
@@ -49,9 +46,8 @@ const Login=(props)=>{
         }
         else{
             const {data,error}=await supabase.auth.signUp({email,password})
-            console.log("d",data)
             if(error){
-                console.log("error while singup",error)
+                alert(error.message)
             }
 
         }
@@ -94,3 +90,4 @@ const Login=(props)=>{
 }
 
 export default Login
+
